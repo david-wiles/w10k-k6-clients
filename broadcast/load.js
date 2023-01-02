@@ -21,11 +21,17 @@ export default function () {
     socket.on('open', function () {
       if (__ENV.K6_LOGGING) console.log('connected');
 
-      // Send the current time twice every second
+      // Send the current time
       socket.send(Date.now());
       socket.setInterval(function timeout() {
         socket.send(Date.now());
-      }, 500);
+      }, parseInt(__ENV.K6_CLIENT_INTERVAL));
+
+      // Close socket after 1 minute after opening
+      socket.setTimeout(function () {
+        if (__ENV.K6_LOGGING) console.log('60 seconds passed, closing the socket');
+        socket.close();
+      }, 60000);
     })
 
     socket.on('message', function (message) {
@@ -42,15 +48,9 @@ export default function () {
         console.error('An unexpected error occured: ', JSON.stringify(e));
       }
     });
-
-    // Close socket after 1 minute
-    socket.setTimeout(function () {
-      if (__ENV.K6_LOGGING) console.log('60 seconds passed, closing the socket');
-      socket.close();
-    }, 60000);
   });
 
-  const pct10 = parseInt(__ENV.K6_EXPECTED_MSG) * 0.1
+  const pct10 = parseInt(__ENV.K6_EXPECTED_MSG) * 0.1;
 
   check(resp, {'status is 101': (r) => r && r.status === 101}, {ws: 'status'});
   check(resp, {'message count is accurate': Math.abs(messageCount - parseInt(__ENV.K6_EXPECTED_MSG)) <= pct10}, {ws: 'messages'});
