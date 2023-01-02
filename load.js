@@ -53,5 +53,5 @@ export default function () {
   const pct10 = parseInt(__ENV.K6_EXPECTED_MSG) * 0.1;
 
   check(resp, {'status is 101': (r) => r && r.status === 101}, {ws: 'status'});
-  check(resp, {'message count is ~5': Math.abs(messageCount - parseInt(__ENV.K6_EXPECTED_MSG)) <= pct10}, {ws: 'messages'});
+  check(resp, {'message count is accurate': Math.abs(messageCount - parseInt(__ENV.K6_EXPECTED_MSG)) <= pct10}, {ws: 'messages'});
 }
