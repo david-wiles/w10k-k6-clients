@@ -14,7 +14,7 @@ export const options = {
 };
 
 export default function () {
-  const url = `ws://127.0.0.1:${__ENV.K6_PORT}/ws`;
+  const url = __ENV.K6_URL;;
   let messageCount = 0;
 
   const resp = ws.connect(url, null, function (socket) {

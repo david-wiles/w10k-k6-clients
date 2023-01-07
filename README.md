@@ -6,7 +6,7 @@ of messages were received within the websocket's lifetime.
 
 These scripts share some environment variables:
 
-* `K6_PORT=<int>`: defines the port the server is listening on
+* `K6_URL=<string>`: defines the entire URL for the server
 * `K6_LOGGING=<bool>`: enables info logging
 
 Start the scripts with
